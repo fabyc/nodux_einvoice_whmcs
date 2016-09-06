@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<form string="Invoice" col="6" cursor="party">
+    <label name="company"/>
+    <field name="company"/>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="type"/>
+    <field name="type"/>
+    <newline/>
+    <label name="invoice_number"/>
+    <field name="invoice_number"/>
+    <label name="estado_sri"/>
+    <field name="estado_sri"/>
+    <label name="numero_autorizacion"/>
+    <field name="numero_autorizacion"/>
+    <newline/>
+    <notebook colspan="6">
+        <page string="Invoice" id="invoice" col="6">
+            <label name="invoice_date"/>
+            <field name="invoice_date"/>
+
+            <field name="lines" colspan="6"
+                view_ids="nodux_einvoice_whmcs.einvoice_line_view_tree_sequence"/>
+            <group col="2" colspan="6" id="taxes_amount_state_buttons">
+                <group col="4" colspan="1" id="amount_state_buttons">
+                    <group col="2" colspan="2" id="reconciled_state">
+                        <label name="state"/>
+                        <field name="state"/>
+                    </group>
+                    <group col="2" colspan="2" id="amount">
+                        <label name="subtotal" xalign="1.0" xexpand="1"/>
+                        <field name="subtotal" xalign="1.0" xexpand="0"/>
+                        <label name="iva" xalign="1.0" xexpand="1"/>
+                        <field name="iva" xalign="1.0" xexpand="0"/>
+                        <label name="total" xalign="1.0" xexpand="1"/>
+                        <field name="total" xalign="1.0" xexpand="0"/>
+                    </group>
+                </group>
+            </group>
+        </page>
+    </notebook>
+    <group col="6" colspan="6" id="msn">
+      <label name="mensaje"/>
+      <field name="mensaje"/>
+    </group>
+
+</form>

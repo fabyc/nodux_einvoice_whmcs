@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+
+<form string="Invoice Line" cursor="product">
+    <label name="invoice"/>
+    <field name="invoice" colspan="3"/>
+    <notebook colspan="4">
+        <page string="General" id="general">
+            <label name="producto"/>
+            <field name="producto"/>
+            <label name="sequence"/>
+            <field name="sequence"/>
+            <newline/>
+            <label name="description"/>
+            <field name="description" colspan="3"/>
+            <label name="quantity"/>
+            <field name="quantity"/>
+            <label name="unit_price"/>
+            <field name="unit_price"/>
+            <label name="amount"/>
+            <field name="amount"/>
+        </page>
+    </notebook>
+</form>

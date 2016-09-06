@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+
+      <menuitem name="Electronic Invoice" sequence="0" id="einvoice"/>
+
+      <record model="ir.ui.view" id="einvoice_view_form">
+          <field name="model">einvoice.einvoice</field>
+          <field name="type">form</field>
+          <field name="name">einvoice_form</field>
+      </record>
+      <record model="ir.ui.view" id="einvoice_view_tree">
+          <field name="model">einvoice.einvoice</field>
+          <field name="type">tree</field>
+          <field name="name">einvoice_tree</field>
+      </record>
+      <record model="ir.action.act_window" id="act_einvoice_form">
+          <field name="name">Electronics vouchers</field>
+          <field name="res_model">einvoice.einvoice</field>
+      </record>
+      <record model="ir.action.act_window.view" id="act_einvoice_form_view1">
+          <field name="sequence" eval="10"/>
+          <field name="view" ref="einvoice_view_tree"/>
+          <field name="act_window" ref="act_einvoice_form"/>
+      </record>
+
+        <record model="ir.action.act_window.view" id="act_einvoice_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="einvoice_view_form"/>
+            <field name="act_window" ref="act_einvoice_form"/>
+        </record>
+
+        <record model="ir.action.act_window" id="act_einvoice_e_invoice_form">
+            <field name="name">Invoices</field>
+            <field name="res_model">einvoice.einvoice</field>
+            <field name="domain">[('type', '=', 'e_invoice')]</field>
+            <field name="context">{'type': 'e_invoice'}</field>
+            <field name="search_value"></field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_einvoice_e_invoice_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="einvoice_view_tree"/>
+            <field name="act_window" ref="act_einvoice_e_invoice_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_einvoice_e_invoice_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="einvoice_view_form"/>
+            <field name="act_window" ref="act_einvoice_e_invoice_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_einvoice_e_invoice_domain_draft">
+            <field name="name">Not Send</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain">[('state', '=', 'draft')]</field>
+            <field name="act_window" ref="act_einvoice_e_invoice_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_einvoice_e_invoice_domain_send">
+            <field name="name">Send</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain">[('state', '=', 'send')]</field>
+            <field name="act_window" ref="act_einvoice_e_invoice_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_einvoice_e_invoice_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_einvoice_e_invoice_form"/>
+        </record>
+        <menuitem parent="einvoice" action="act_einvoice_e_invoice_form"
+            id="menu_einvoice_e_invoice_form" sequence="1"/>
+
+        <record model="ir.action.act_window" id="act_einvoice_e_credit_note_form">
+            <field name="name">Credit Notes</field>
+            <field name="res_model">einvoice.einvoice</field>
+            <field name="domain">[('type', '=', 'e_credit_note')]</field>
+            <field name="context">{'type': 'e_credit_note'}</field>
+            <field name="search_value"></field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_einvoice_e_credit_note_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="einvoice_view_tree"/>
+            <field name="act_window" ref="act_einvoice_e_credit_note_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_einvoice_e_credit_note_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="einvoice_view_form"/>
+            <field name="act_window" ref="act_einvoice_e_credit_note_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_einvoice_e_credit_note_domain_draft">
+            <field name="name">Not Send</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain">[('state', '=', 'draft')]</field>
+            <field name="act_window" ref="act_einvoice_e_credit_note_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_einvoice_e_credit_note_domain_send">
+            <field name="name">Send</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain">[('state', '=', 'send')]</field>
+            <field name="act_window" ref="act_einvoice_e_credit_note_form"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_einvoice_e_credit_note_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_einvoice_e_credit_note_form"/>
+        </record>
+        <menuitem parent="einvoice" action="act_einvoice_e_credit_note_form"
+            id="menu_einvoice_e_credit_note_form" sequence="2"/>
+
+        <!-- Lines -->
+        <record model="ir.ui.view" id="einvoice_line_view_form">
+            <field name="model">einvoice.einvoice.line</field>
+            <field name="type">form</field>
+            <field name="name">invoice_line_form</field>
+        </record>
+        <record model="ir.ui.view" id="einvoice_line_view_tree">
+            <field name="model">einvoice.einvoice.line</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="10"/>
+            <field name="name">invoice_line_tree</field>
+        </record>
+
+        <record model="ir.ui.view" id="einvoice_line_view_tree_sequence">
+            <field name="model">einvoice.einvoice.line</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="20"/>
+            <field name="name">invoice_line_tree_sequence</field>
+        </record>
+        <!-- Report -->
+        <record model="ir.action.report" id="report_einvoice">
+            <field name="name">Comprobante </field>
+            <field name="model">einvoice.einvoice</field>
+            <field name="report_name">einvoice.einvoice</field>
+            <field name="report">nodux_einvoice_whmcs/invoice.odt</field>
+            <field name="style"></field>
+        </record>
+
+        <record model="ir.action.keyword" id="report_einvoice_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">einvoice.einvoice,-1</field>
+            <field name="action" ref="report_einvoice"/>
+        </record>
+    </data>
+</tryton>

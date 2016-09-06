@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<data>
+    <xpath
+        expr="/form/field[@name='code']"
+        position="after">
+        <newline/>
+        <label name="commercial_name"/>
+        <field name="commercial_name"/>
+    </xpath>
+
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='addresses']"
+        position="before">
+        <separator string="VAT" colspan="4" id="vat"/>
+        <label name="vat_number"/>
+        <field name="vat_number"/>
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='general']/label[@name='vat_number']"
+        position="before">
+        <label name="type_document"/>
+        <field name="type_document"/>
+        <newline/>
+    </xpath>
+
+     <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='vat_number']"
+        position="after">
+        <newline/>
+        <label name="mandatory_accounting"/>
+        <field name="mandatory_accounting"/>
+        <newline/>
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='mandatory_accounting']"
+        position="after">
+        <newline/>
+        <label name="contribuyente_especial"/>
+        <field name="contribuyente_especial"/>
+        <newline/>
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='contribuyente_especial']"
+        position="after">
+        <newline/>
+        <label name="contribuyente_especial_nro"/>
+        <field name="contribuyente_especial_nro"/>
+        <newline/>
+    </xpath>
+
+    <xpath
+        expr="/form/notebook/page[@id='accounting']/separator[@id='vat']"
+        position="replace">
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='accounting']/field[@name='vat_number']"
+        position="replace">
+    </xpath>
+
+    <xpath
+        expr="/form/notebook/page[@id='accounting']/label[@name='vat_number']"
+        position="replace">
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='accounting']/field[@name='vat_country']"
+        position="replace">
+    </xpath>
+    <xpath
+        expr="/form/notebook/page[@id='accounting']/label[@name='vat_country']"
+        position="replace">
+    </xpath>
+
+    <xpath
+        expr="/form/notebook/page[@id='accounting']" position="replace">
+    </xpath>
+
+    <xpath
+        expr="/form/notebook/page[@id='general']/field[@name='contact_mechanisms']"
+        position="replace">
+
+        <field name="contact_mechanisms2" colspan="2"
+            view_ids="party.contact_mechanism_view_tree_sequence"/>
+    </xpath>
+</data>

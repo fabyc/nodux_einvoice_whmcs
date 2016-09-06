@@ -1,0 +1,728 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:einvoice.einvoice.line:"
+msgid ""
+"You can not add a line to invoice \"%(invoice)s\" that is posted, paid or "
+"cancelled."
+msgstr "No puede agregar lineas a la factura \"%(invoice)s\" porque está enviada."
+
+msgctxt "error:einvoice.einvoice.line:"
+msgid ""
+"You can not create invoice line \"%(line)s\" on invoice \"%(invoice)s of "
+"company \"%(invoice_line_company)s because account \"%(account)s has company"
+" \"%(account_company)s\"."
+msgstr "No puede crear las lineas \"%(line)s\" en la factura \"%(invoice)s\""
+
+msgctxt "error:einvoice.einvoice.line:"
+msgid ""
+"You can not create invoice line \"%(line)s\" on invoice \"%(invoice)s\" "
+"because the invoice uses the same account (%(account)s)."
+msgstr "No puede crear lineas de factura \"%(line)s\" en la factura \"%(invoice)s\" "
+
+msgctxt "error:einvoice.einvoice.line:"
+msgid ""
+"You can not modify line \"%(line)s\" from invoice \"%(invoice)s\" that is "
+"posted or paid."
+msgstr "No puede modificar las lineas \"%(line)s\" de la factura \"%(invoice)s\""
+
+msgctxt "error:einvoice.einvoice:"
+msgid "You can not delete invoice \"%s\" because it is send."
+msgstr "No puede eliminar la factura \"%s\" porque está enviada."
+
+msgctxt "error:einvoice.einvoice:"
+msgid "You can not modify invoice \"%s\" because it is send."
+msgstr "No puede modificar la factura \"%s\" porque está enviada."
+
+msgctxt "error:party.party:"
+msgid "Correo electronico no cumple con la estructura (ejemplo@mail.com)"
+msgstr ""
+
+msgctxt "error:party.party:"
+msgid ""
+"Es requerido ingresar un correo, para el envio de comprobantes electronicos"
+msgstr ""
+
+msgctxt "field:company.company,emission_code:"
+msgid "Tipo de Emision"
+msgstr ""
+
+msgctxt "field:company.company,establecimiento:"
+msgid "Establecimiento"
+msgstr ""
+
+msgctxt "field:company.company,logo:"
+msgid "Logo de su empresa"
+msgstr ""
+
+msgctxt "field:company.company,p_emision:"
+msgid "Punto de Emision"
+msgstr ""
+
+msgctxt "field:company.company,pass_pk12:"
+msgid "Password de la firma digital"
+msgstr ""
+
+msgctxt "field:company.company,password:"
+msgid "Password WS"
+msgstr "Contraseña WS"
+
+msgctxt "field:company.company,password_pk12:"
+msgid "Password de la Firma Digital"
+msgstr "Contraseña de la Firma Digital"
+
+msgctxt "field:company.company,password_ws:"
+msgid "Password WS"
+msgstr "Contraseña WS"
+
+msgctxt "field:company.company,secuencia_factura:"
+msgid "Secuencia de Facturas"
+msgstr ""
+
+msgctxt "field:company.company,secuencia_notaCredito:"
+msgid "Secuencia de Nota de Credito"
+msgstr ""
+
+msgctxt "field:company.company,tipo_de_ambiente:"
+msgid "Tipo de Ambiente"
+msgstr ""
+
+msgctxt "field:company.company,user:"
+msgid "Usuario WS"
+msgstr ""
+
+msgctxt "field:company.company,user_ws:"
+msgid "Usuario WS"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:einvoice.einvoice,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:einvoice.einvoice,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:einvoice.einvoice,estado_sri:"
+msgid "Estado Facturacion-Electronica"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,fecha_autorizacion:"
+msgid "Fecha Autorizacion"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:einvoice.einvoice,id_reference:"
+msgid "ID referencia factura"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,invoice_date:"
+msgid "Fecha Factura"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,invoice_number:"
+msgid "No. Comprobante"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,iva:"
+msgid "IVA"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,lines:"
+msgid "Lines"
+msgstr "Lineas"
+
+msgctxt "field:einvoice.einvoice,mensaje:"
+msgid "Mensaje de error SRI"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,numero_autorizacion:"
+msgid "Número de Autorización"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,party:"
+msgid "Party"
+msgstr "Terceros"
+
+msgctxt "field:einvoice.einvoice,path_pdf:"
+msgid "Path archivo pdf de factura"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,path_xml:"
+msgid "Path archivo xml de comprobante"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:einvoice.einvoice,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:einvoice.einvoice,subtotal:"
+msgid "Subtotal"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,total:"
+msgid "Total"
+msgstr ""
+
+msgctxt "field:einvoice.einvoice,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:einvoice.einvoice,write_date:"
+msgid "Write Date"
+msgstr "Fecha de Modificación"
+
+msgctxt "field:einvoice.einvoice,write_uid:"
+msgid "Write User"
+msgstr "Modificado por Usuario"
+
+msgctxt "field:einvoice.einvoice.line,amount:"
+msgid "Amount"
+msgstr "Monto"
+
+msgctxt "field:einvoice.einvoice.line,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:einvoice.einvoice.line,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:einvoice.einvoice.line,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:einvoice.einvoice.line,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:einvoice.einvoice.line,invoice:"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "field:einvoice.einvoice.line,producto:"
+msgid "Product"
+msgstr "Productos"
+
+msgctxt "field:einvoice.einvoice.line,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "field:einvoice.einvoice.line,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:einvoice.einvoice.line,sequence:"
+msgid "Sequence"
+msgstr "Secuencia"
+
+msgctxt "field:einvoice.einvoice.line,unit_price:"
+msgid "Unit Price"
+msgstr "Precio Unitario"
+
+msgctxt "field:einvoice.einvoice.line,write_date:"
+msgid "Write Date"
+msgstr "Fecha de Modificación"
+
+msgctxt "field:einvoice.einvoice.line,write_uid:"
+msgid "Write User"
+msgstr "Modificado por Usuario"
+
+msgctxt "field:party.party,commercial_name:"
+msgid "Commercial Name"
+msgstr "Nombre comercial"
+
+msgctxt "field:party.party,contact_mechanisms2:"
+msgid "Contact Mechanisms"
+msgstr "Medios de Contacto"
+
+msgctxt "field:party.party,contribuyente_especial:"
+msgid "Contribuyente especial"
+msgstr ""
+
+msgctxt "field:party.party,contribuyente_especial_nro:"
+msgid "Nro. Resolucion"
+msgstr ""
+
+msgctxt "field:party.party,mandatory_accounting:"
+msgid "Mandatory Accounting"
+msgstr "Obligado a Contabilidad"
+
+msgctxt "field:party.party,type_document:"
+msgid "Type Document"
+msgstr "Tipo de Documento"
+
+msgctxt "field:res.user,cabecera:"
+msgid "Protocolo de Comunicacion"
+msgstr ""
+
+msgctxt "field:res.user,direccion:"
+msgid "Direccion del Servidor"
+msgstr ""
+
+msgctxt "field:res.user,name_db:"
+msgid "Nombre de la Base de Datos"
+msgstr ""
+
+msgctxt "field:res.user,name_db_c:"
+msgid "Nombre de la Base de Datos"
+msgstr ""
+
+msgctxt "field:res.user,pass_db:"
+msgid "Password de la Base de Datos"
+msgstr "Contraseña de la Base de Datos"
+
+#, fuzzy
+msgctxt "field:res.user,pass_db_c:"
+msgid "Password de la Base de Datos"
+msgstr "Contraseña de la Base de Datos"
+
+msgctxt "field:res.user,puerto:"
+msgid "Nro. Puerto"
+msgstr ""
+
+msgctxt "field:res.user,usuario:"
+msgid "Usuario de la Base de Datos"
+msgstr ""
+
+msgctxt "field:res.user,usuario_c:"
+msgid "Usuario de la Base de Datos"
+msgstr ""
+
+msgctxt "help:company.company,establecimiento:"
+msgid "Establecimiento autorizado por el SRI ej.001"
+msgstr ""
+
+msgctxt "help:company.company,logo:"
+msgid "Logo para RIDE de sus facturas"
+msgstr ""
+
+msgctxt "help:company.company,p_emision:"
+msgid "Punto de emision ej.001"
+msgstr ""
+
+msgctxt "help:company.company,password_pk12:"
+msgid "Contraseña de la firma digital"
+msgstr ""
+
+msgctxt "help:company.company,password_ws:"
+msgid "Ingrese la contraseña que le fue emitido por NODUX"
+msgstr ""
+
+msgctxt "help:company.company,secuencia_factura:"
+msgid "Secuencia ej. 234"
+msgstr ""
+
+msgctxt "help:company.company,secuencia_notaCredito:"
+msgid "Secuencia ej. 234"
+msgstr ""
+
+msgctxt "help:company.company,user_ws:"
+msgid "Ingrese el usuario que le fue emitido por NODUX"
+msgstr ""
+
+msgctxt "help:party.party,contact_mechanisms2:"
+msgid "Requerido ingresar un correo electronico"
+msgstr ""
+
+msgctxt "help:party.party,contribuyente_especial:"
+msgid "Seleccione solo si es contribuyente especial"
+msgstr ""
+
+msgctxt "help:party.party,contribuyente_especial_nro:"
+msgid "Contribuyente Especial Nro."
+msgstr ""
+
+msgctxt "help:res.user,direccion:"
+msgid "Direccion para conexion con WS-Nodux"
+msgstr ""
+
+msgctxt "help:res.user,puerto:"
+msgid "Puerto para conexion con WS-Nodux"
+msgstr ""
+
+msgctxt "model:einvoice.einvoice,name:"
+msgid "EInvoice"
+msgstr "Factura Electrónica"
+
+msgctxt "model:einvoice.einvoice.line,name:"
+msgid "Invoice Line"
+msgstr "Linea de Factura"
+
+msgctxt "model:ir.action,name:act_einvoice_e_credit_note_form"
+msgid "Credit Notes"
+msgstr "Nota de Crédito"
+
+msgctxt "model:ir.action,name:act_einvoice_e_invoice_form"
+msgid "Invoices"
+msgstr "Facturas"
+
+msgctxt "model:ir.action,name:act_einvoice_form"
+msgid "Electronics vouchers"
+msgstr "Comprobantes Electrónicos"
+
+msgctxt "model:ir.action,name:report_einvoice"
+msgid "Comprobante "
+msgstr ""
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_einvoice_e_credit_note_domain_all"
+msgid "All"
+msgstr "Todo"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_einvoice_e_credit_note_domain_draft"
+msgid "Not Send"
+msgstr "No enviada"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_einvoice_e_credit_note_domain_send"
+msgid "Sended"
+msgstr "Enviada"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_einvoice_e_invoice_domain_all"
+msgid "All"
+msgstr "Todo"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_einvoice_e_invoice_domain_draft"
+msgid "Not Send"
+msgstr "No enviada"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_einvoice_e_invoice_domain_send"
+msgid "Sended"
+msgstr "Enviada"
+
+msgctxt "model:ir.ui.menu,name:einvoice"
+msgid "Electronic Invoice"
+msgstr "Comprobantes Electrónicos"
+
+msgctxt "model:ir.ui.menu,name:menu_einvoice_e_credit_note_form"
+msgid "Credit Notes"
+msgstr "Nota de Crédito"
+
+msgctxt "model:ir.ui.menu,name:menu_einvoice_e_invoice_form"
+msgid "Invoices"
+msgstr "Facturas"
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "%"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "0"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "0.00"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "14"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "4"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid ":"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "A"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "CLAVE DE ACCESO:"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Cantidad"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Cliente"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Comprobante que se modifica"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Contribuyente especial Nro.:"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Descripcion"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Direcció"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Dirección"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "EMISION: NORMAL"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "FACTURA"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Fecha emision (comprobante a modificar)"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Fecha emisión"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "I"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "IVA 1"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Identificación:"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "MBIENTE:"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "N"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "NFORMACIÓN ADICIONAL"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "NUMERO DE AUTORIZACIÓN"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Nodux - (07) 2 560215 - 0999323367 - hola@nodux.e"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "N°:"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "OTA DE CRÉDITO"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Obligado a llevar contabilidad:"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "PRODUCCIÓN"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Precio Total"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Precio Unitario"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "RUC"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Razón social/Nombre y Apellidos:"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Razón:"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "SUBTOTAL"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "SUBTOTAL SIN IMPUESTOS"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "SUBTOTAL excento de IVA"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "SUBTOTAL no objeto de IVA"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "Sistema"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "VALOR TOTAL"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "c"
+msgstr "c"
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "matriz"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "n"
+msgstr ""
+
+msgctxt "odt:einvoice.einvoice:"
+msgid "n sucursal:"
+msgstr ""
+
+msgctxt "selection:company.company,emission_code:"
+msgid "Normal"
+msgstr ""
+
+msgctxt "selection:company.company,tipo_de_ambiente:"
+msgid "Produccion"
+msgstr ""
+
+msgctxt "selection:company.company,tipo_de_ambiente:"
+msgid "Pruebas"
+msgstr ""
+
+msgctxt "selection:einvoice.einvoice,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:einvoice.einvoice,state:"
+msgid "Send"
+msgstr "Enviado"
+
+msgctxt "selection:einvoice.einvoice,type:"
+msgid "Electronic Credit Note"
+msgstr "Nota de Crédito Electrónica"
+
+msgctxt "selection:einvoice.einvoice,type:"
+msgid "Electronic Invoice"
+msgstr "Factura Electrónica"
+
+msgctxt "selection:party.party,mandatory_accounting:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:party.party,mandatory_accounting:"
+msgid "No"
+msgstr ""
+
+msgctxt "selection:party.party,mandatory_accounting:"
+msgid "Si"
+msgstr ""
+
+msgctxt "selection:party.party,type_document:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:party.party,type_document:"
+msgid "Cedula"
+msgstr ""
+
+msgctxt "selection:party.party,type_document:"
+msgid "Consumidor Final"
+msgstr ""
+
+msgctxt "selection:party.party,type_document:"
+msgid "Pasaporte"
+msgstr ""
+
+msgctxt "selection:party.party,type_document:"
+msgid "RUC"
+msgstr ""
+
+msgctxt "selection:res.user,cabecera:"
+msgid "http://"
+msgstr ""
+
+msgctxt "selection:res.user,cabecera:"
+msgid "https://"
+msgstr ""
+
+msgctxt "view:company.company:"
+msgid "Firma Digital"
+msgstr ""
+
+msgctxt "view:company.company:"
+msgid "NODUX WS"
+msgstr ""
+
+msgctxt "view:company.company:"
+msgid "Secuencia de Facturas"
+msgstr ""
+
+msgctxt "view:company.company:"
+msgid "Tipo de Ambiente"
+msgstr ""
+
+msgctxt "view:company.company:"
+msgid "Usuario y password de autenticacion"
+msgstr ""
+
+msgctxt "view:einvoice.einvoice.line:"
+msgid "General"
+msgstr "General"
+
+msgctxt "view:einvoice.einvoice.line:"
+msgid "Invoice Line"
+msgstr "Linea de Factura"
+
+msgctxt "view:einvoice.einvoice.line:"
+msgid "Invoice Lines"
+msgstr "Lineas de Factura"
+
+msgctxt "view:einvoice.einvoice:"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "view:einvoice.einvoice:"
+msgid "Invoices"
+msgstr "Facturas"
+
+msgctxt "view:einvoice.einvoice:"
+msgid "Monto total comprobantes emitidos"
+msgstr ""
+
+msgctxt "view:party.party:"
+msgid "VAT"
+msgstr "CI/RUC"
+
+msgctxt "view:res.user:"
+msgid "Conexion WS-Nodux"
+msgstr ""
