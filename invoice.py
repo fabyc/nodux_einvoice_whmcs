@@ -392,6 +392,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             error = s.model.nodux_electronic_invoice_auth.conexiones.check_digital_signature(file_check,{})
             if error == '1':
                 self.raise_user_error('No se ha encontrado el archivo de firma digital (.p12)')
+
             signed_document= s.model.nodux_electronic_invoice_auth.conexiones.apply_digital_signature(factura, file_pk12, password,{})
             result = s.model.nodux_electronic_invoice_auth.conexiones.send_receipt(signed_document, {})
             if result != True:
@@ -412,6 +413,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
                     'estado_sri':'NO AUTORIZADO',
                     'numero_autorizacion': access_key,
                     'state':'draft'})
+                return "Comprobante se ha enviado al SRI pero no se ha AUTORIZADO, reenvie su comprobante"
             else:
                 self.write([self],{
                         'estado_sri':'AUTORIZADO',
@@ -452,6 +454,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
                     'estado_sri':'NO AUTORIZADO',
                     'numero_autorizacion': access_key,
                     'state':'draft'})
+                return "Comprobante se ha enviado al SRI pero no se ha AUTORIZADO, reenvie su comprobante"
             else:
                 self.write([self],{
                         'estado_sri':'AUTORIZADO',
@@ -480,7 +483,8 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             path_xml = cur.fetchone()
             xml_element = urllib2.urlopen('http://nodux.ec:8085/static/'+str(path_xml[0]))
             xml_element =etree.parse(xml_element)
-            print etree.tostring(xml_element,pretty_print=True ,xml_declaration=True, encoding="utf-8")
+            xml_element = etree.tostring(xml_element,pretty_print=True ,xml_declaration=True, encoding="utf-8")
+            xml_element = xml_element.replace('&lt;', '<').replace('&gt;', '>')
             archivo = xmlrpclib.Binary(xml_element)
 
         if formato == 'pdf':
@@ -509,10 +513,14 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         cur = conn.cursor()
         cur.execute("SELECT tipo, fecha, numero_comprobante, numero_autorizacion, total FROM factura_web WHERE cedula=%s and ruc=%s", (identificacion, ruc))
         result = cur.fetchall()
-        return result
+        invoices = []
+        for r in result:
+            invoices.append(r)
+        return invoices
 
     @classmethod
     def save_invoice(cls, tipo, id_factura, date, maturity_date, subtotal, total, identificacion, items, firstname, lastname, email, address, city, state, country, phonenumber ):
+        print "Ingresa: ", tipo, id_factura, date, maturity_date, subtotal, total, identificacion, items, firstname, lastname, email, address, city, state, country, phonenumber
         data = xmlrpclib.loads(items)
         lineas_producto = str(data[0]).split(", ")
         pool = Pool()
@@ -522,6 +530,21 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         Template = pool.get('product.template')
         Product = pool.get('product.product')
         Units = pool.get('product.uom')
+        e_invoices_c = None
+        if tipo == 'factura':
+            type_ = 'e_invoice'
+        else:
+            type_ = 'e_credit_note'
+        e_invoices_c = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', type_)])
+        if e_invoices_c:
+            for invoice in e_invoices_c:
+                if invoice.estado_sri == "NO AUTORIZADO":
+                    invoice.action_generate_invoice()
+                    invoice.connect_db()
+                    return "Comprobante enviado con exito"
+                elif invoice.estado_sri == "AUTORIZADO":
+                    return "Comprobante ya ha sido enviado anteriormente"
+
         products = None
         parties = None
         direccion = "Loja"
@@ -626,7 +649,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         invoice.set_number()
         invoice.action_generate_invoice()
         invoice.connect_db()
-        return 1
+        return "Comprobante enviado con exito"
 
     def generate_xml_invoice(self):
         factura = etree.Element('factura')
