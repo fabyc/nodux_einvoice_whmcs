@@ -487,6 +487,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             xml_element = xml_element.replace('&lt;', '<').replace('&gt;', '>')
             archivo = xmlrpclib.Binary(xml_element)
 
+
         if formato == 'pdf':
             invoice = cur.execute("SELECT path_pdf FROM factura_web WHERE numero_autorizacion=%s",[numero_autorizacion])
             path_pdf = cur.fetchone()
@@ -508,7 +509,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         user = 'nodux' #usuario de la base de datos postgres
         password = 'noduxitondx24' #password de la base de datos postgres
         host = '162.248.52.245' #ip host
-        ruc = '1191758435001'
+        ruc = '0702590498001'
         conn = psycopg2.connect(database=database,user= user, password=password, host=host)
         cur = conn.cursor()
         cur.execute("SELECT tipo, fecha, numero_comprobante, numero_autorizacion, total FROM factura_web WHERE cedula=%s and ruc=%s", (identificacion, ruc))
