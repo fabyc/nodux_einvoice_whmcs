@@ -36,6 +36,18 @@ class Company():
     secuencia_factura = fields.Integer('Secuencia de Facturas', help=u'Secuencia ej. 234')
     secuencia_notaCredito = fields.Integer('Secuencia de Nota de Credito', help=u'Secuencia ej. 234')
 
+
+    name_database = fields.Char('Base de datos para consulta de comprobantes electronicos')#base de datos creada para guardar datos de consultas facturas electronicas
+    user_databse = fields.Char('Usuario de la base de datos postgres')#usuario de la base de datos postgres
+    password_database = fields.Char('Password de la base de datos postgres')#password de la base de datos postgres
+    host_database = fields.Char('IP Host')#ip host
+
+    name_db = fields.Function(fields.Char('Base de datos para consulta de comprobantes electronicos'), getter='get_namedb', setter='set_namedb')
+    user_db = fields.Function(fields.Char('Usuario de la base de datos postgres'), getter='get_userdb', setter='set_userdb')
+    password_db = fields.Function(fields.Char('Password de la base de datos postgres'), getter='get_passworddb', setter='set_passworddb')
+    host_db = fields.Function(fields.Char('IP Host'), getter='get_hostdb', setter='set_hostdb')
+
+
     @classmethod
     def __setup__(cls):
         super(Company, cls).__setup__()
@@ -96,5 +108,61 @@ class Company():
         for company in companys:
             to_write.extend([[company], {
                         'password_pk12': base64.encodestring(value),
+                        }])
+        cls.write(*to_write)
+
+    def get_namedb(self, name):
+        return 'x' * 10
+
+    @classmethod
+    def set_namedb(cls, companys, name, value):
+        if value == 'x' * 10:
+            return
+        to_write = []
+        for company in companys:
+            to_write.extend([[company], {
+                        'name_database': base64.encodestring(value),
+                        }])
+        cls.write(*to_write)
+
+    def get_userdb(self, name):
+        return 'x' * 10
+
+    @classmethod
+    def set_userdb(cls, companys, name, value):
+        if value == 'x' * 10:
+            return
+        to_write = []
+        for company in companys:
+            to_write.extend([[company], {
+                        'user_databse': base64.encodestring(value),
+                        }])
+        cls.write(*to_write)
+
+    def get_passworddb(self, name):
+        return 'x' * 10
+
+    @classmethod
+    def set_passworddb(cls, companys, name, value):
+        if value == 'x' * 10:
+            return
+        to_write = []
+        for company in companys:
+            to_write.extend([[company], {
+                        'password_database': base64.encodestring(value),
+                        }])
+        cls.write(*to_write)
+
+    def get_hostdb(self, name):
+        return 'x' * 10
+
+    @classmethod
+    def set_hostdb(cls, companys, name, value):
+        if value == 'x' * 10:
+            return
+        to_write = []
+        for company in companys:
+            to_write.extend([[company], {
+                        'host_database': base64.encodestring(value),
                         }])
         cls.write(*to_write)

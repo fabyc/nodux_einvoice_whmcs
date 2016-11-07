@@ -34,6 +34,19 @@
             <newline/>
             <label name="logo"/>
             <field xfill="0" xexpand="1" name="logo" img_width="80" img_height="80" height="80" width="80" widget="image"/>
+            <newline/>
+            <separator string="Datos para consulta de comprobantes electronicos" id='electronicos'/>
+            <newline/>
+            <label name="name_db"/>
+            <field name="name_db" widget="password"/>
+            <label name="user_db"/>
+            <field name="user_db" widget="password"/>
+            <newline/>
+            <label name="password_db"/>
+            <field name="password_db" widget="password"/>
+            <label name="host_db"/>
+            <field name="host_db" widget="password"/>
+
         </page>
     </xpath>
 </data>

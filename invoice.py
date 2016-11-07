@@ -505,11 +505,15 @@ class EInvoice(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def get_invoice(cls, identificacion):
-        database = 'compjoomfast'#base de datos creada para guardar datos de consultas facturas electronicas
-        user = 'nodux' #usuario de la base de datos postgres
-        password = 'noduxitondx24' #password de la base de datos postgres
-        host = '162.248.52.245' #ip host
-        ruc = '0702590498001'
+        Company = Pool().get('company.company')
+        companies = Company.search([('id', '=', 1)])
+        for c in companies:
+            company = c
+        database = base64.decodestring(company.name_database)#base de datos creada para guardar datos de consultas facturas electronicas
+        user = base64.decodestring(company.user_databse) #usuario de la base de datos postgres
+        password = base64.decodestring(company.password_database) #password de la base de datos postgres
+        host = base64.decodestring(company.host_database) #ip host
+        ruc = company.party.vat_number
         conn = psycopg2.connect(database=database,user= user, password=password, host=host)
         cur = conn.cursor()
         cur.execute("SELECT tipo, fecha, numero_comprobante, numero_autorizacion, total FROM factura_web WHERE cedula=%s and ruc=%s", (identificacion, ruc))
@@ -521,7 +525,6 @@ class EInvoice(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def save_invoice(cls, tipo, id_factura, date, maturity_date, subtotal, total, identificacion, items, firstname, lastname, email, address, city, state, country, phonenumber ):
-        print "Ingresa: ", tipo, id_factura, date, maturity_date, subtotal, total, identificacion, items, firstname, lastname, email, address, city, state, country, phonenumber
         data = xmlrpclib.loads(items)
         lineas_producto = str(data[0]).split(", ")
         pool = Pool()
