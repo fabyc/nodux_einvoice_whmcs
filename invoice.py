@@ -22,11 +22,9 @@ import time
 from trytond.rpc import RPC
 import os
 from trytond.config import config
-import re
 from trytond import backend
 import collections
 from itertools import islice, ifilter, chain, izip
-from flask import send_file
 import psycopg2
 import psycopg2.extras
 import urllib2
