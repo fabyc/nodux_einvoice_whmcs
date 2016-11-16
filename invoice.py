@@ -464,10 +464,16 @@ class EInvoice(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def get_path(cls, formato, numero_autorizacion, id_reference):
-        database = 'compjoomfast'#base de datos creada para guardar datos de consultas facturas electronicas
-        user = 'nodux' #usuario de la base de datos postgres
-        password = 'noduxitondx24' #password de la base de datos postgres
-        host = '162.248.52.245' #ip host
+
+        Company = Pool().get('company.company')
+        companies = Company.search([('id', '=', 1)])
+        for c in companies:
+            company = c
+        database = base64.decodestring(company.name_database)#base de datos creada para guardar datos de consultas facturas electronicas
+        user = base64.decodestring(company.user_databse) #usuario de la base de datos postgres
+        password = base64.decodestring(company.password_database) #password de la base de datos postgres
+        host = base64.decodestring(company.host_database) #ip host
+        
         Invoice = Pool().get('einvoice.einvoice')
         invoices = Invoice.search([('id_reference', '=', id_reference), ('type', '=', 'e_invoice')])
         for i in invoices:
