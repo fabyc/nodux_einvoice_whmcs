@@ -473,7 +473,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         user = base64.decodestring(company.user_databse) #usuario de la base de datos postgres
         password = base64.decodestring(company.password_database) #password de la base de datos postgres
         host = base64.decodestring(company.host_database) #ip host
-        
+
         Invoice = Pool().get('einvoice.einvoice')
         invoices = Invoice.search([('id_reference', '=', id_reference), ('type', '=', 'e_invoice')])
         for i in invoices:
@@ -559,6 +559,10 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         phone = ""
         name = str(firstname)+str(lastname)
         vat_number = str(identificacion)
+        if len(vat_number) == 10:
+            type_document = "05"
+        if len(vat_number) == 13:
+            type_document = "04"
         address = str(address)
         importeTotal = Decimal(total)
         totalSinImpuestos = Decimal(subtotal)
@@ -580,6 +584,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             Contact = pool.get('party.contact_mechanism')
             Address = pool.get('party.address')
             party.name = name
+            party.type_document = type_document
             party.vat_number = vat_number
             party.save()
             contact_mechanisms = []
@@ -657,7 +662,11 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         invoice.set_number()
         invoice.action_generate_invoice()
         invoice.connect_db()
-        return "Comprobante enviado con exito"
+        if invoice.estado_sri == "NO AUTORIZADO":
+            return "Comprobante no se ha AUTORIZADO, contacte con el ADMINISTRADOR"
+        else:
+            return "Comprobante enviado con éxito"
+
 
     def generate_xml_invoice(self):
         factura = etree.Element('factura')
