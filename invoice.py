@@ -234,7 +234,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
                     address = c.cabecera+"://"+base64.decodestring(c.usuario)+":"+base64.decodestring(c.pass_db)+"@"+c.direccion+":"+c.puerto+"/"+base64.decodestring(c.name_db)
                     return address
                 else:
-                    self.raise_user_error(CONEXION)
+                    return CONEXION
 
     def send_mail_invoice(self, xml_element, access_key, send_m, s, server="localhost"):
         MAIL= u"Ud no ha configurado el correo del cliente. Diríjase a: \nTerceros->General->Medios de Contacto"
@@ -370,10 +370,10 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         if authenticate == '1':
             pass
         else:
-            self.raise_user_error(AUTHENTICATE_ERROR)
+            return AUTHENTICATE_ERROR
 
         if active == '1':
-            self.raise_user_error(ACTIVE_ERROR)
+            return ACTIVE_ERROR
         else:
             pass
 
@@ -383,18 +383,18 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             factura = etree.tostring(factura1, encoding = 'utf8', method = 'xml')
             a = s.model.nodux_electronic_invoice_auth.conexiones.validate_xml(factura, 'out_invoice', {})
             if a:
-                self.raise_user_error(a)
+                return a
             file_pk12 = base64.encodestring(nuevaruta+'/'+name_c)
             file_check = (nuevaruta+'/'+name_c)
             password = self.company.password_pk12
             error = s.model.nodux_electronic_invoice_auth.conexiones.check_digital_signature(file_check,{})
             if error == '1':
-                self.raise_user_error('No se ha encontrado el archivo de firma digital (.p12)')
+                return ('No se ha encontrado el archivo de firma digital (.p12). Contacte con el administrador')
 
             signed_document= s.model.nodux_electronic_invoice_auth.conexiones.apply_digital_signature(factura, file_pk12, password,{})
             result = s.model.nodux_electronic_invoice_auth.conexiones.send_receipt(signed_document, {})
             if result != True:
-                self.raise_user_error(result)
+                return result
 
             if self.company.party.email:
                 email = self.company.party.email
@@ -424,17 +424,17 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             notaCredito = etree.tostring(notaCredito1, encoding = 'utf8', method = 'xml')
             a = s.model.nodux_electronic_invoice_auth.conexiones.validate_xml(notaCredito, 'out_credit_note', {})
             if a:
-                self.raise_user_error(a)
+                return a
             file_pk12 = base64.encodestring(nuevaruta+'/'+name_c)
             file_check = (nuevaruta+'/'+name_c)
             password = self.company.password_pk12
             error = s.model.nodux_electronic_invoice_auth.conexiones.check_digital_signature(file_check,{})
             if error == '1':
-                self.raise_user_error('No se ha encontrado el archivo de firma digital (.p12)')
+                return 'No se ha encontrado el archivo de firma digital (.p12). Contacte con el administrador'
             signed_document= s.model.nodux_electronic_invoice_auth.conexiones.apply_digital_signature(notaCredito, file_pk12, password,{})
             result = s.model.nodux_electronic_invoice_auth.conexiones.send_receipt(signed_document, {})
             if result != True:
-                self.raise_user_error(result)
+                return result
 
             if self.company.party.email:
                 email = self.company.party.email
@@ -513,6 +513,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         companies = Company.search([('id', '=', 1)])
         for c in companies:
             company = c
+
         database = base64.decodestring(company.name_database)#base de datos creada para guardar datos de consultas facturas electronicas
         user = base64.decodestring(company.user_databse) #usuario de la base de datos postgres
         password = base64.decodestring(company.password_database) #password de la base de datos postgres
@@ -538,6 +539,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         Template = pool.get('product.template')
         Product = pool.get('product.product')
         Units = pool.get('product.uom')
+        invoice_self = Invoice()
         e_invoices_c = None
         if tipo == 'factura':
             type_ = 'e_invoice'
@@ -557,7 +559,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         parties = None
         direccion = "Loja"
         phone = ""
-        name = str(firstname)+str(lastname)
+        name = invoice_self.replace_character(str(firstname))+ invoice_self.replace_character(str(lastname))
         vat_number = str(identificacion)
         if len(vat_number) == 10:
             type_document = "05"
@@ -618,7 +620,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         for l_p in lineas_producto:
             l_p1 = l_p.replace('[','').replace(']','').replace('(','').replace(')','').replace("'",'').replace(',','')
             l_p1 = l_p1.split(' -- ')
-            descripcion = l_p1[0]
+            descripcion = invoice_self.replace_character(l_p1[0])
             precio = l_p1[1]
             if descripcion:
                 products = Template.search([('name', '=', descripcion)])
@@ -665,7 +667,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         if invoice.estado_sri == "NO AUTORIZADO":
             return "Comprobante no se ha AUTORIZADO, contacte con el ADMINISTRADOR"
         else:
-            return "Comprobante enviado con éxito"
+            return "Comprobante enviado con exito"
 
 
     def generate_xml_invoice(self):
