@@ -565,7 +565,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             type_document = "05"
         if len(vat_number) == 13:
             type_document = "04"
-        address = str(address)
+        address = invoice_self.replace_character(address)
         importeTotal = Decimal(total)
         totalSinImpuestos = Decimal(subtotal)
         date_str = str(date)
