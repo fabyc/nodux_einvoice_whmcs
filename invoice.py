@@ -373,7 +373,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             return AUTHENTICATE_ERROR
 
         if active == '1':
-            return ACTIVE_ERROR
+            self.raise_user_error(ACTIVE_ERROR)
         else:
             pass
 
@@ -383,13 +383,13 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             factura = etree.tostring(factura1, encoding = 'utf8', method = 'xml')
             a = s.model.nodux_electronic_invoice_auth.conexiones.validate_xml(factura, 'out_invoice', {})
             if a:
-                return a
+                self.raise_user_error(a)
             file_pk12 = base64.encodestring(nuevaruta+'/'+name_c)
             file_check = (nuevaruta+'/'+name_c)
             password = self.company.password_pk12
             error = s.model.nodux_electronic_invoice_auth.conexiones.check_digital_signature(file_check,{})
             if error == '1':
-                return ('No se ha encontrado el archivo de firma digital (.p12). Contacte con el administrador')
+                self.raise_user_error('No se ha encontrado el archivo de firma digital (.p12)')
 
             signed_document= s.model.nodux_electronic_invoice_auth.conexiones.apply_digital_signature(factura, file_pk12, password,{})
             result = s.model.nodux_electronic_invoice_auth.conexiones.send_receipt(signed_document, {})
@@ -424,13 +424,13 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             notaCredito = etree.tostring(notaCredito1, encoding = 'utf8', method = 'xml')
             a = s.model.nodux_electronic_invoice_auth.conexiones.validate_xml(notaCredito, 'out_credit_note', {})
             if a:
-                return a
+                self.raise_user_error(a)
             file_pk12 = base64.encodestring(nuevaruta+'/'+name_c)
             file_check = (nuevaruta+'/'+name_c)
             password = self.company.password_pk12
             error = s.model.nodux_electronic_invoice_auth.conexiones.check_digital_signature(file_check,{})
             if error == '1':
-                return 'No se ha encontrado el archivo de firma digital (.p12). Contacte con el administrador'
+                self.raise_user_error('No se ha encontrado el archivo de firma digital (.p12)')
             signed_document= s.model.nodux_electronic_invoice_auth.conexiones.apply_digital_signature(notaCredito, file_pk12, password,{})
             result = s.model.nodux_electronic_invoice_auth.conexiones.send_receipt(signed_document, {})
             if result != True:
@@ -513,7 +513,6 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         companies = Company.search([('id', '=', 1)])
         for c in companies:
             company = c
-
         database = base64.decodestring(company.name_database)#base de datos creada para guardar datos de consultas facturas electronicas
         user = base64.decodestring(company.user_databse) #usuario de la base de datos postgres
         password = base64.decodestring(company.password_database) #password de la base de datos postgres
@@ -539,8 +538,9 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         Template = pool.get('product.template')
         Product = pool.get('product.product')
         Units = pool.get('product.uom')
-        invoice_self = Invoice()
         e_invoices_c = None
+        invoice_self = Invoice()
+
         if tipo == 'factura':
             type_ = 'e_invoice'
         else:
@@ -559,7 +559,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         parties = None
         direccion = "Loja"
         phone = ""
-        name = invoice_self.replace_character(str(firstname))+ invoice_self.replace_character(str(lastname))
+        name = invoice_self.replace_character(firstname)+invoice_self.replace_character(lastname)
         vat_number = str(identificacion)
         if len(vat_number) == 10:
             type_document = "05"
@@ -667,7 +667,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         if invoice.estado_sri == "NO AUTORIZADO":
             return "Comprobante no se ha AUTORIZADO, contacte con el ADMINISTRADOR"
         else:
-            return "Comprobante enviado con exito"
+            return "Comprobante enviado con éxito"
 
 
     def generate_xml_invoice(self):
