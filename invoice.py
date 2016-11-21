@@ -559,13 +559,13 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         parties = None
         direccion = "Loja"
         phone = ""
-        name = invoice_self.replace_character(firstname)+invoice_self.replace_character(lastname)
+        name = firstname.decode('utf8') + lastname.decode('utf8')
         vat_number = str(identificacion)
         if len(vat_number) == 10:
             type_document = "05"
         if len(vat_number) == 13:
             type_document = "04"
-        address = invoice_self.replace_character(address)
+        address = address.decode('utf8')
         importeTotal = Decimal(total)
         totalSinImpuestos = Decimal(subtotal)
         date_str = str(date)
@@ -620,7 +620,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         for l_p in lineas_producto:
             l_p1 = l_p.replace('[','').replace(']','').replace('(','').replace(')','').replace("'",'').replace(',','')
             l_p1 = l_p1.split(' -- ')
-            descripcion = invoice_self.replace_character(l_p1[0])
+            descripcion = (l_p1[0]).decode('utf8')
             precio = l_p1[1]
             if descripcion:
                 products = Template.search([('name', '=', descripcion)])
