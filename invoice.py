@@ -323,7 +323,12 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         cedula = self.party.vat_number
         ruc = self.company.party.vat_number
         nombre_e = self.company.party.name
-        tipo = self.type
+
+        if self.type == "e_invoice":
+            tipo = "out_invoice"
+        else:
+            tipo = "out_credit_note"
+            
         fecha = str(self.invoice_date)
         empresa = self.company.party.name
         numero = self.invoice_number
