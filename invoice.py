@@ -328,7 +328,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             tipo = "out_invoice"
         else:
             tipo = "out_credit_note"
-            
+
         fecha = str(self.invoice_date)
         empresa = self.company.party.name
         numero = self.invoice_number
@@ -592,12 +592,17 @@ class EInvoice(Workflow, ModelSQL, ModelView):
                 contact_mechanisms = Contact.search([('party', '=', party.id)])
                 addresses = Address.search([('party','=', party.id)])
                 for contact_mechanism in contact_mechanisms:
+                    if email:
+                        correo = str(email)
+                    else:
+                        correo = 'hola@nodux.ec'
                     if contact_mechanism.type == "email":
                         contact_mechanism.value = correo
                         contact_mechanism.save()
-                    if contact_mechanism.type == "phone":
-                        contact_mechanism.value = phone
-                        contact_mechanism.save()
+                    if phone != "":
+                        if contact_mechanism.type == "phone":
+                            contact_mechanism.value = phone
+                            contact_mechanism.save()
                 for address in addresses:
                     address.street = address
                     address.city = city
