@@ -91,6 +91,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
     lines = fields.One2Many('einvoice.einvoice.line', 'invoice', 'Lines',
         states=_STATES)
     id_reference = fields.Char('ID referencia factura', readonly=True)
+    anulada = fields.Boolean('Anulada con nota de Credito')
 
     @classmethod
     def __setup__(cls):
@@ -373,7 +374,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             return AUTHENTICATE_ERROR
 
         if active == '1':
-            self.raise_user_error(ACTIVE_ERROR)
+            return ACTIVE_ERROR
         else:
             pass
 
@@ -383,13 +384,13 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             factura = etree.tostring(factura1, encoding = 'utf8', method = 'xml')
             a = s.model.nodux_electronic_invoice_auth.conexiones.validate_xml(factura, 'out_invoice', {})
             if a:
-                self.raise_user_error(a)
+                return a
             file_pk12 = base64.encodestring(nuevaruta+'/'+name_c)
             file_check = (nuevaruta+'/'+name_c)
             password = self.company.password_pk12
             error = s.model.nodux_electronic_invoice_auth.conexiones.check_digital_signature(file_check,{})
             if error == '1':
-                self.raise_user_error('No se ha encontrado el archivo de firma digital (.p12)')
+                return ('No se ha encontrado el archivo de firma digital (.p12)')
 
             signed_document= s.model.nodux_electronic_invoice_auth.conexiones.apply_digital_signature(factura, file_pk12, password,{})
             result = s.model.nodux_electronic_invoice_auth.conexiones.send_receipt(signed_document, {})
@@ -424,13 +425,13 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             notaCredito = etree.tostring(notaCredito1, encoding = 'utf8', method = 'xml')
             a = s.model.nodux_electronic_invoice_auth.conexiones.validate_xml(notaCredito, 'out_credit_note', {})
             if a:
-                self.raise_user_error(a)
+                return a
             file_pk12 = base64.encodestring(nuevaruta+'/'+name_c)
             file_check = (nuevaruta+'/'+name_c)
             password = self.company.password_pk12
             error = s.model.nodux_electronic_invoice_auth.conexiones.check_digital_signature(file_check,{})
             if error == '1':
-                self.raise_user_error('No se ha encontrado el archivo de firma digital (.p12)')
+                return ('No se ha encontrado el archivo de firma digital (.p12)')
             signed_document= s.model.nodux_electronic_invoice_auth.conexiones.apply_digital_signature(notaCredito, file_pk12, password,{})
             result = s.model.nodux_electronic_invoice_auth.conexiones.send_receipt(signed_document, {})
             if result != True:
@@ -545,7 +546,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             type_ = 'e_invoice'
         else:
             type_ = 'e_credit_note'
-        e_invoices_c = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', type_)])
+        e_invoices_c = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', type_), ('anulada', '=', None)])
         if e_invoices_c:
             for invoice in e_invoices_c:
                 if invoice.estado_sri == "NO AUTORIZADO":
@@ -559,13 +560,13 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         parties = None
         direccion = "Loja"
         phone = ""
-        name = invoice_self.replace_character(firstname)+invoice_self.replace_character(lastname)
+        name = str(firstname)+str(lastname)
         vat_number = str(identificacion)
         if len(vat_number) == 10:
             type_document = "05"
         if len(vat_number) == 13:
             type_document = "04"
-        address = invoice_self.replace_character(address)
+        address = str(address)
         importeTotal = Decimal(total)
         totalSinImpuestos = Decimal(subtotal)
         date_str = str(date)
@@ -576,7 +577,27 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         lineas = []
         if parties:
             for p in parties:
+                Contact = pool.get('party.contact_mechanism')
+                Address = pool.get('party.address')
                 party = p
+                party.name = name
+                party.type_document = type_document
+                party.vat_number = vat_number
+                party.save()
+                contact_mechanisms = Contact.search([('party', '=', party.id)])
+                addresses = Address.search([('party','=', party.id)])
+                for contact_mechanism in contact_mechanisms:
+                    if contact_mechanism.type == "email":
+                        contact_mechanism.value = correo
+                        contact_mechanism.save()
+                    if contact_mechanism.type == "phone":
+                        contact_mechanism.value = phone
+                        contact_mechanism.save()
+                for address in addresses:
+                    address.street = address
+                    address.city = city
+                    address.save()
+                party.save()
         else:
             party = Party()
             if email:
@@ -615,12 +636,17 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             invoice.type = 'e_invoice'
         else:
             invoice.type = 'e_credit_note'
+            anull_invoices = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', 'e_invoice'), ('anulada', '=', None)])
+            for a_invoice in anull_invoices:
+                a_invoice.anulada = True
+                a_invoice.save()
+
         invoice.save()
         cont = 1
         for l_p in lineas_producto:
             l_p1 = l_p.replace('[','').replace(']','').replace('(','').replace(')','').replace("'",'').replace(',','')
             l_p1 = l_p1.split(' -- ')
-            descripcion = invoice_self.replace_character(l_p1[0])
+            descripcion = l_p1[0]
             precio = l_p1[1]
             if descripcion:
                 products = Template.search([('name', '=', descripcion)])
