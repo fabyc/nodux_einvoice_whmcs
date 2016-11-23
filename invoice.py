@@ -277,7 +277,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         #nuevaruta =os.getcwd() +'/comprobantes/'+empresa+'/'+year+'/'+month +'/'
         nr = s.model.nodux_electronic_invoice_auth.conexiones.path_files(ruc, {})
         nuevaruta = nr +empresa+'/'+year+'/'+month +'/'
-        new_save = 'comprobantes2/'+empresa+'/'+year+'/'+month +'/'
+        new_save = 'comprobantes/'+empresa+'/'+year+'/'+month +'/'
         ruta_xml = str(new_save+name_xml)
         ruta_pdf = str(new_save+name_pdf)
         self.write([self],{
@@ -538,7 +538,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         return invoices
 
     @classmethod
-    def save_invoice(cls, tipo, id_factura, date, maturity_date, subtotal, total, identificacion, items, razonSocial, firstname, lastname, email, address, city, state, country, phonenumber ):
+    def save_invoice(cls, tipo, id_factura, date, maturity_date, subtotal, tax, identificacion, items, razonSocial, firstname, lastname, email, address, city, state, country, phonenumber ):
         data = xmlrpclib.loads(items)
         lineas_producto = str(data[0]).split(", ")
         pool = Pool()
@@ -577,7 +577,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         if len(vat_number) == 13:
             type_document = "04"
         address = str(address)
-        importeTotal = Decimal(total)
+        importeTotal = Decimal(subtotal+tax)
         totalSinImpuestos = Decimal(subtotal)
         date_str = str(date)
         parties = Party.search([('vat_number', '=', vat_number)])
@@ -703,7 +703,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             })
         invoice.party= party.id
         invoice.subtotal= totalSinImpuestos
-        invoice.iva= Decimal(importeTotal-totalSinImpuestos)
+        invoice.iva= Decimal(tax)
         invoice.total= importeTotal
         invoice.invoice_date=fechaEmision
         lines = Lines.create(lineas)
