@@ -565,7 +565,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         parties = None
         direccion = "Loja"
         phone = ""
-        name = str(firstname)+str(lastname)
+        name = str(firstname)+" "+str(lastname)
         vat_number = str(identificacion)
         if len(vat_number) == 10:
             type_document = "05"
@@ -603,10 +603,10 @@ class EInvoice(Workflow, ModelSQL, ModelView):
                         if contact_mechanism.type == "phone":
                             contact_mechanism.value = phone
                             contact_mechanism.save()
-                for address in addresses:
-                    address.street = address
-                    address.city = city
-                    address.save()
+                for address_p in addresses:
+                    address_p.street = address
+                    address_p.city = city
+                    address_p.save()
                 party.save()
         else:
             party = Party()
