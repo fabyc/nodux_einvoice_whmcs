@@ -786,7 +786,12 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             etree.SubElement(infoFactura, 'tipoIdentificacionComprador').text = tipoIdentificacion[self.party.type_document]
         else:
             self.raise_user_error("No ha configurado el tipo de identificacion del cliente")
-        etree.SubElement(infoFactura, 'razonSocialComprador').text = self.replace_character(self.party.name)
+            
+        if self.party.commercial_name != "":
+            etree.SubElement(infoFactura, 'razonSocialComprador').text = self.replace_character(self.party.commercial_name)
+        else:
+            etree.SubElement(infoFactura, 'razonSocialComprador').text = self.replace_character(self.party.name)
+
         etree.SubElement(infoFactura, 'identificacionComprador').text = self.party.vat_number
         if self.party.addresses:
             etree.SubElement(infoFactura, 'direccionComprador').text = self.party.addresses[0].street
