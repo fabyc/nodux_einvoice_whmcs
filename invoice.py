@@ -570,8 +570,6 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         direccion = "Loja"
         phone = ""
         name = str(firstname)+" "+str(lastname)
-        if razonSocial != "":
-            party.commercial_name = razonSocial
 
         vat_number = str(identificacion)
         if len(vat_number) == 10:
@@ -591,7 +589,11 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             for p in parties:
                 Contact = pool.get('party.contact_mechanism')
                 Address = pool.get('party.address')
+
                 party = p
+
+                if razonSocial != "":
+                    party.commercial_name = razonSocial
                 party.name = name
                 party.type_document = type_document
                 party.vat_number = vat_number
@@ -624,6 +626,8 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             Contact = pool.get('party.contact_mechanism')
             Address = pool.get('party.address')
             party.name = name
+            if razonSocial != "":
+                party.commercial_name = razonSocial
             party.type_document = type_document
             party.vat_number = vat_number
             party.save()
@@ -786,7 +790,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             etree.SubElement(infoFactura, 'tipoIdentificacionComprador').text = tipoIdentificacion[self.party.type_document]
         else:
             self.raise_user_error("No ha configurado el tipo de identificacion del cliente")
-            
+
         if self.party.commercial_name != "":
             etree.SubElement(infoFactura, 'razonSocialComprador').text = self.replace_character(self.party.commercial_name)
         else:
