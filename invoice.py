@@ -577,7 +577,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         if len(vat_number) == 13:
             type_document = "04"
         address = str(address)
-        importeTotal = Decimal(subtotal+tax)
+        importeTotal = Decimal(subtotal)+ Decimal(tax)
         totalSinImpuestos = Decimal(subtotal)
         date_str = str(date)
         parties = Party.search([('vat_number', '=', vat_number)])
