@@ -145,6 +145,10 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         return 'draft'
 
     @staticmethod
+    def default_anulada():
+        return False
+
+    @staticmethod
     def default_company():
         return Transaction().context.get('company')
 
@@ -551,7 +555,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             type_ = 'e_invoice'
         else:
             type_ = 'e_credit_note'
-        e_invoices_c = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', type_), ('anulada', '=', None)])
+        e_invoices_c = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', type_), ('anulada', '=', False)])
         if e_invoices_c:
             for invoice in e_invoices_c:
                 if invoice.estado_sri == "NO AUTORIZADO":
@@ -646,7 +650,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             invoice.type = 'e_invoice'
         else:
             invoice.type = 'e_credit_note'
-            anull_invoices = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', 'e_invoice'), ('anulada', '=', None)])
+            anull_invoices = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', 'e_invoice'), ('anulada', '=', False)])
             for a_invoice in anull_invoices:
                 a_invoice.anulada = True
                 a_invoice.save()
@@ -700,10 +704,10 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         invoice.set_number()
         invoice.action_generate_invoice()
         invoice.connect_db()
-        if invoice.estado_sri == "NO AUTORIZADO":
-            return "Comprobante no se ha AUTORIZADO, contacte con el ADMINISTRADOR"
-        else:
+        if invoice.estado_sri == "AUTORIZADO":
             return "Comprobante enviado con éxito"
+        else:
+            return "Comprobante no se ha AUTORIZADO, contacte con el ADMINISTRADOR"
 
 
     def generate_xml_invoice(self):
