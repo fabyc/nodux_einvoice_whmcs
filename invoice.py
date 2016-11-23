@@ -538,7 +538,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         return invoices
 
     @classmethod
-    def save_invoice(cls, tipo, id_factura, date, maturity_date, subtotal, total, identificacion, items, firstname, lastname, email, address, city, state, country, phonenumber ):
+    def save_invoice(cls, tipo, id_factura, date, maturity_date, subtotal, total, identificacion, items, razonSocial, firstname, lastname, email, address, city, state, country, phonenumber ):
         data = xmlrpclib.loads(items)
         lineas_producto = str(data[0]).split(", ")
         pool = Pool()
@@ -570,6 +570,9 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         direccion = "Loja"
         phone = ""
         name = str(firstname)+" "+str(lastname)
+        if razonSocial != "":
+            party.commercial_name = razonSocial
+
         vat_number = str(identificacion)
         if len(vat_number) == 10:
             type_document = "05"
