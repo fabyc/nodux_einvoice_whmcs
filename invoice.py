@@ -556,6 +556,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         else:
             type_ = 'e_credit_note'
         e_invoices_c = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', type_), ('anulada', '=', False)])
+
         if e_invoices_c:
             for invoice in e_invoices_c:
                 if invoice.estado_sri == "NO AUTORIZADO":
@@ -576,6 +577,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             type_document = "05"
         if len(vat_number) == 13:
             type_document = "04"
+
         address = str(address)
         importeTotal = Decimal(subtotal)+ Decimal(tax)
         totalSinImpuestos = Decimal(subtotal)
@@ -701,11 +703,14 @@ class EInvoice(Workflow, ModelSQL, ModelView):
                 'quantity': 1,
                 'invoice':invoice.id,
             })
+        date = Pool().get('ir.date')
+        date_sale = date.today()
+
         invoice.party= party.id
         invoice.subtotal= totalSinImpuestos
         invoice.iva= Decimal(tax)
         invoice.total= importeTotal
-        invoice.invoice_date=fechaEmision
+        invoice.invoice_date = date_sale
         lines = Lines.create(lineas)
         invoice.save()
         invoice.set_number()
