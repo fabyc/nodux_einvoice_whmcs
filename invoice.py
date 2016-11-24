@@ -98,7 +98,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         super(EInvoice, cls).__setup__()
         cls._check_modify_exclude = ['state', 'lines', 'estado_sri', 'mensaje'
                 'invoice_report_cache', 'invoice_number', 'path_xml', 'path_pdf',
-                'id_reference', 'numero_autorizacion']
+                'id_reference', 'numero_autorizacion', 'anulada']
         cls.__rpc__['save_invoice'] = RPC(check_access=False, readonly=False)
         cls.__rpc__['get_invoice'] = RPC(check_access=False, readonly=False)
         cls.__rpc__['get_path'] = RPC(check_access=False, readonly=False)
@@ -549,7 +549,6 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         Product = pool.get('product.product')
         Units = pool.get('product.uom')
         e_invoices_c = None
-        invoice_self = Invoice()
 
         if tipo == 'factura':
             type_ = 'e_invoice'
@@ -589,36 +588,31 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         lineas = []
         if parties:
             for p in parties:
+                party = p
                 Contact = pool.get('party.contact_mechanism')
                 Address = pool.get('party.address')
 
-                party = p
-
                 if razonSocial != "":
-                    party.commercial_name = razonSocial
-                party.name = name
-                party.type_document = type_document
-                party.vat_number = vat_number
-                party.save()
-                contact_mechanisms = Contact.search([('party', '=', party.id)])
-                addresses = Address.search([('party','=', party.id)])
-                for contact_mechanism in contact_mechanisms:
+                    p.commercial_name = razonSocial
+                p.name = name
+                p.type_document = type_document
+                p.vat_number = vat_number
+                p.save()
+                contact_mechanisms_old = Contact.search([('party', '=', p.id)])
+                for contact_mechanism_old in contact_mechanisms_old:
                     if email:
                         correo = str(email)
                     else:
                         correo = 'hola@nodux.ec'
-                    if contact_mechanism.type == "email":
-                        contact_mechanism.value = correo
-                        contact_mechanism.save()
+                    if contact_mechanism_old.type == "email":
+                        contact_mechanism_old.value = correo
+                        contact_mechanism_old.save()
                     if phone != "":
-                        if contact_mechanism.type == "phone":
-                            contact_mechanism.value = phone
-                            contact_mechanism.save()
-                for address_p in addresses:
-                    address_p.street = address
-                    address_p.city = city
-                    address_p.save()
-                party.save()
+                        if contact_mechanism_old.type == "phone":
+                            contact_mechanism_old.value = phone
+                            contact_mechanism_old.save()
+                p.addresses[0].street = address
+                p.save()
         else:
             party = Party()
             if email:
@@ -651,20 +645,23 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             }])
             contact_mechanisms = Contact.create(contact_mechanisms)
             party.save()
-
+            
         invoice = Invoice()
         invoice.company=1
         invoice.id_reference = str(id_factura)
         if tipo == 'factura':
             invoice.type = 'e_invoice'
+            invoice.save()
         else:
             invoice.type = 'e_credit_note'
+            invoice.save()
+            anull_invoices = None
             anull_invoices = Invoice.search([('id_reference', '=', str(id_factura)), ('type', '=', 'e_invoice'), ('anulada', '=', False)])
-            for a_invoice in anull_invoices:
-                a_invoice.anulada = True
-                a_invoice.save()
-
-        invoice.save()
+            if anull_invoices:
+                for a_invoice in anull_invoices:
+                    a_invoice.anulada = True
+                    a_invoice.save()
+        
         cont = 1
         for l_p in lineas_producto:
             l_p1 = l_p.replace('[','').replace(']','').replace('(','').replace(')','').replace("'",'').replace(',','')
@@ -705,7 +702,6 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             })
         date = Pool().get('ir.date')
         date_sale = date.today()
-
         invoice.party= party.id
         invoice.subtotal= totalSinImpuestos
         invoice.iva= Decimal(tax)
