@@ -645,7 +645,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             }])
             contact_mechanisms = Contact.create(contact_mechanisms)
             party.save()
-            
+
         invoice = Invoice()
         invoice.company=1
         invoice.id_reference = str(id_factura)
@@ -661,7 +661,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
                 for a_invoice in anull_invoices:
                     a_invoice.anulada = True
                     a_invoice.save()
-        
+
         cont = 1
         for l_p in lineas_producto:
             l_p1 = l_p.replace('[','').replace(']','').replace('(','').replace(')','').replace("'",'').replace(',','')
@@ -801,7 +801,12 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         if self.party.addresses:
             etree.SubElement(infoFactura, 'direccionComprador').text = self.party.addresses[0].street
         etree.SubElement(infoFactura, 'totalSinImpuestos').text = '%.2f' % (self.subtotal)
-        etree.SubElement(infoFactura, 'totalDescuento').text = '0.00' #descuento esta incluido en el precio poner 0.0 por defecto
+
+        descuento = Decimal(0.0)
+        for line in self.lines:
+            if line.amount < Decimal(0.0):
+                descuento += (line.amount*-1)
+        etree.SubElement(infoFactura, 'totalDescuento').text = '%.2f' % (descuento) #descuento esta incluido en el precio poner 0.0 por defecto
 
         totalConImpuestos = etree.Element('totalConImpuestos')
         totalImpuesto = etree.Element('totalImpuesto')
@@ -824,32 +829,35 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         detalles = etree.Element('detalles')
 
         for line in self.lines:
-            pool = Pool()
-            detalle = etree.Element('detalle')
-            Product = pool.get('product.product')
-            product = None
-            products = Product.search([('template', '=', line.producto.id)])
-            for p in products:
-                product = p
-                if product:
-                    etree.SubElement(detalle, 'codigoPrincipal').text = self.replace_character(product.code)
-                else:
-                    etree.SubElement(detalle, 'codigoPrincipal').text = '[COD0]'
-            etree.SubElement(detalle, 'descripcion').text = self.replace_character(line.description)#fix_chars(line.description)
-            etree.SubElement(detalle, 'cantidad').text = '%.2f' % (line.quantity)
-            etree.SubElement(detalle, 'precioUnitario').text = '%.2f' % (line.unit_price)
-            etree.SubElement(detalle, 'descuento').text = '0.00'
-            etree.SubElement(detalle, 'precioTotalSinImpuesto').text = '%.2f' % (line.amount)
-            impuestos = etree.Element('impuestos')
-            impuesto = etree.Element('impuesto')
-            etree.SubElement(impuesto, 'codigo').text = "2"
-            etree.SubElement(impuesto, 'codigoPorcentaje').text = '3' #3iva14, 2iva12, 0iva0
-            etree.SubElement(impuesto, 'tarifa').text = '14' #tarifas:14,12,0
-            etree.SubElement(impuesto, 'baseImponible').text = '{:.2f}'.format(line.amount)
-            etree.SubElement(impuesto, 'valor').text = '{:.2f}'.format(line.amount*Decimal(0.14))
-            impuestos.append(impuesto)
-            detalle.append(impuestos)
-            detalles.append(detalle)
+            if line.amount < Decimal(0.0):
+                pass
+            else:
+                pool = Pool()
+                detalle = etree.Element('detalle')
+                Product = pool.get('product.product')
+                product = None
+                products = Product.search([('template', '=', line.producto.id)])
+                for p in products:
+                    product = p
+                    if product:
+                        etree.SubElement(detalle, 'codigoPrincipal').text = self.replace_character(product.code)
+                    else:
+                        etree.SubElement(detalle, 'codigoPrincipal').text = '[COD0]'
+                etree.SubElement(detalle, 'descripcion').text = self.replace_character(line.description)#fix_chars(line.description)
+                etree.SubElement(detalle, 'cantidad').text = '%.2f' % (line.quantity)
+                etree.SubElement(detalle, 'precioUnitario').text = '%.2f' % (line.unit_price)
+                etree.SubElement(detalle, 'descuento').text = '0.00'
+                etree.SubElement(detalle, 'precioTotalSinImpuesto').text = '%.2f' % (line.amount)
+                impuestos = etree.Element('impuestos')
+                impuesto = etree.Element('impuesto')
+                etree.SubElement(impuesto, 'codigo').text = "2"
+                etree.SubElement(impuesto, 'codigoPorcentaje').text = '3' #3iva14, 2iva12, 0iva0
+                etree.SubElement(impuesto, 'tarifa').text = '14' #tarifas:14,12,0
+                etree.SubElement(impuesto, 'baseImponible').text = '{:.2f}'.format(line.amount)
+                etree.SubElement(impuesto, 'valor').text = '{:.2f}'.format(line.amount*Decimal(0.14))
+                impuestos.append(impuesto)
+                detalle.append(impuestos)
+                detalles.append(detalle)
         return detalles
 
     def get_credit_note_element(self):
@@ -1095,9 +1103,20 @@ class EInvoiceReport(Report):
             localcontext['motivo'] = 'Emitir factura con el mismo concepto'
         localcontext['subtotal0'] = '0.0'
         localcontext['subtotal14'] = einvoice.subtotal
+        localcontext['descuento'] = cls._get_descuento(EInvoice, einvoice)
 
         return super(EInvoiceReport, cls).parse(report, records, data,
                 localcontext=localcontext)
+
+    @classmethod
+    def _get_descuento(cls, EInvoice, einvoice):
+        numero = None
+        descuento = Decimal(0.0)
+        for line in einvoice.lines:
+            if line.amount < Decimal(0.0):
+                descuento += (line.amount*-1)
+
+        return descuento
 
     @classmethod
     def _get_numero(cls, EInvoice, einvoice):
