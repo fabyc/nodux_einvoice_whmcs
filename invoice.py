@@ -102,6 +102,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         cls.__rpc__['save_invoice'] = RPC(check_access=False, readonly=False)
         cls.__rpc__['get_invoice'] = RPC(check_access=False, readonly=False)
         cls.__rpc__['get_path'] = RPC(check_access=False, readonly=False)
+        cls.__rpc__['get_path_adm'] = RPC(check_access=False, readonly=False)
         cls._order.insert(0, ('invoice_date', 'DESC'))
         cls._order.insert(1, ('id', 'DESC'))
         cls._error_messages.update({
@@ -501,6 +502,42 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             xml_element = xml_element.replace('&lt;', '<').replace('&gt;', '>')
             archivo = xmlrpclib.Binary(xml_element)
 
+
+        if formato == 'pdf':
+            invoice = cur.execute("SELECT path_pdf FROM factura_web WHERE numero_autorizacion=%s",[numero_autorizacion])
+            path_pdf = cur.fetchone()
+            pool = Pool()
+            Invoices = pool.get('einvoice.einvoice')
+            invoices = Invoices.search([('numero_autorizacion', '=', numero_autorizacion)])
+            for i in invoices:
+                invoice = i
+            InvoiceReport = pool.get('einvoice.einvoice', type='report')
+            report = InvoiceReport.execute([invoice.id], {})
+            archivo = xmlrpclib.Binary(report[1])
+
+        return archivo
+
+    @classmethod
+    def get_path_adm(cls,id_reference):
+
+        Company = Pool().get('company.company')
+        companies = Company.search([('id', '=', 1)])
+        for c in companies:
+            company = c
+        database = base64.decodestring(company.name_database)#base de datos creada para guardar datos de consultas facturas electronicas
+        user = base64.decodestring(company.user_databse) #usuario de la base de datos postgres
+        password = base64.decodestring(company.password_database) #password de la base de datos postgres
+        host = base64.decodestring(company.host_database) #ip host
+
+        Invoice = Pool().get('einvoice.einvoice')
+        invoices = Invoice.search([('id_reference', '=', id_reference), ('type', '=', 'e_invoice')])
+        for i in invoices:
+            invoice = i
+            numero_autorizacion = invoice.numero_autorizacion
+
+        conn = psycopg2.connect(database=database,user= user, password=password, host=host)
+        cur = conn.cursor()
+        formato = 'pdf'
 
         if formato == 'pdf':
             invoice = cur.execute("SELECT path_pdf FROM factura_web WHERE numero_autorizacion=%s",[numero_autorizacion])
