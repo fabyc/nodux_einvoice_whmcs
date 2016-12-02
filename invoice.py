@@ -401,7 +401,6 @@ class EInvoice(Workflow, ModelSQL, ModelView):
             error = s.model.nodux_electronic_invoice_auth.conexiones.check_digital_signature(file_check,{})
             if error == '1':
                 return ('No se ha encontrado el archivo de firma digital (.p12)')
-
             signed_document= s.model.nodux_electronic_invoice_auth.conexiones.apply_digital_signature(factura, file_pk12, password,{})
             result = s.model.nodux_electronic_invoice_auth.conexiones.send_receipt(signed_document, {})
             if result != True:
@@ -576,8 +575,14 @@ class EInvoice(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def save_invoice(cls, tipo, id_factura, date, maturity_date, subtotal, tax, identificacion, items, razonSocial, firstname, lastname, email, address, city, state, country, phonenumber ):
+
         data = xmlrpclib.loads(items)
-        lineas_producto = str(data[0]).split(", ")
+        lineas_producto = []
+        for d in data[0]:
+            for datas in d:
+                for data_s in datas:
+                    lineas_producto.append( data_s.encode('latin-1'))
+        #lineas_producto = str(data[0]).split(", ")
         pool = Pool()
         Party = pool.get('party.party')
         Lines = pool.get('einvoice.einvoice.line')
@@ -606,7 +611,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         parties = None
         direccion = "Loja"
         phone = ""
-        name = str(firstname)+" "+str(lastname)
+        name = firstname+ " " +lastname
 
         vat_number = str(identificacion)
         if len(vat_number) == 10:
@@ -614,7 +619,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         if len(vat_number) == 13:
             type_document = "04"
 
-        address = str(address)
+        address = address
         importeTotal = Decimal(subtotal)+ Decimal(tax)
         totalSinImpuestos = Decimal(subtotal)
         date_str = str(date)
@@ -800,7 +805,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         etree.SubElement(infoTributaria, 'tipoEmision').text = self.company.emission_code
         etree.SubElement(infoTributaria, 'razonSocial').text = self.replace_character(self.company.party.name)
         if self.company.party.commercial_name:
-            etree.SubElement(infoTributaria, 'nombreComercial').text = self.company.party.commercial_name
+            etree.SubElement(infoTributaria, 'nombreComercial').text = self.replace_character(self.company.party.commercial_name)
         etree.SubElement(infoTributaria, 'ruc').text = self.company.party.vat_number
         etree.SubElement(infoTributaria, 'claveAcceso').text = self.generate_access_key()
         etree.SubElement(infoTributaria, 'codDoc').text = tipoDocumento[self.type]
@@ -808,7 +813,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         etree.SubElement(infoTributaria, 'ptoEmi').text = number[4:7]
         etree.SubElement(infoTributaria, 'secuencial').text = number[8:17]
         if self.company.party.addresses:
-            etree.SubElement(infoTributaria, 'dirMatriz').text = self.company.party.addresses[0].street
+            etree.SubElement(infoTributaria, 'dirMatriz').text = self.replace_character(self.company.party.addresses[0].street)
         return infoTributaria
 
     def get_invoice_element(self):
@@ -817,7 +822,7 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         infoFactura = etree.Element('infoFactura')
         etree.SubElement(infoFactura, 'fechaEmision').text = self.invoice_date.strftime('%d/%m/%Y')
         if self.company.party.addresses:
-            etree.SubElement(infoFactura, 'dirEstablecimiento').text = self.company.party.addresses[0].street
+            etree.SubElement(infoFactura, 'dirEstablecimiento').text = self.replace_character(self.company.party.addresses[0].street)
         if self.company.party.contribuyente_especial_nro:
             etree.SubElement(infoFactura, 'contribuyenteEspecial').text = self.company.party.contribuyente_especial_nro
         if self.company.party.mandatory_accounting:
@@ -829,14 +834,14 @@ class EInvoice(Workflow, ModelSQL, ModelView):
         else:
             self.raise_user_error("No ha configurado el tipo de identificacion del cliente")
 
-        if self.party.commercial_name != "":
+        if self.party.commercial_name:
             etree.SubElement(infoFactura, 'razonSocialComprador').text = self.replace_character(self.party.commercial_name)
         else:
             etree.SubElement(infoFactura, 'razonSocialComprador').text = self.replace_character(self.party.name)
 
         etree.SubElement(infoFactura, 'identificacionComprador').text = self.party.vat_number
         if self.party.addresses:
-            etree.SubElement(infoFactura, 'direccionComprador').text = self.party.addresses[0].street
+            etree.SubElement(infoFactura, 'direccionComprador').text = self.replace_character(self.party.addresses[0].street)
         etree.SubElement(infoFactura, 'totalSinImpuestos').text = '%.2f' % (self.subtotal)
 
         descuento = Decimal(0.0)
